@@ -1,0 +1,32 @@
+workflows:
+  ios-unsigned:
+    name: iOS Unsigned Build (.app)
+    environment:
+      flutter: stable
+      xcode: latest
+      vars:
+        PACKAGE_NAME: "com.example.not"
+
+    scripts:
+      - name: Flutter dependencies
+        script: |
+          flutter pub get
+
+      - name: Clean build
+        script: |
+          flutter clean
+
+      - name: Build iOS (no codesign)
+        script: |
+          flutter build ios --debug --no-codesign
+
+      - name: Create output folder
+        script: |
+          mkdir -p build/output
+
+      - name: Copy .app file
+        script: |
+          cp -R build/ios/iphoneos/Runner.app build/output/
+
+    artifacts:
+      - build/output/*.app
